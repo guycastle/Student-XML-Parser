@@ -66,7 +66,7 @@ namespace Examen_Voorbeeld
             StringBuilder sb = new StringBuilder(valResult ? "All elements are valid" : "Warning: validation errors detected\r\n");
             if (!valResult)
             {
-                var invalidCount = Task.Run<int>(() => students.Count(x => !x.Validate()));
+                var invalidCount = Task.Run<int>(() => (from s in students where !s.Validate() select s).Count());
                 var tooOldCount = Task.Run<int>(() => students.Count(x => Helper.getLeeftijd(x) > 100));
                 var tooYoungCount = Task.Run<int>(() => students.Count(x => Helper.getLeeftijd(x) < 15));
                 var tooOldList = Task.Run<IEnumerable<Student>>(() => students.Where(x => Helper.getLeeftijd(x) > 100));
