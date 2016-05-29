@@ -9,9 +9,9 @@ namespace Domain
 {
     public static class Helper
     {
-        public static void SetAuditCreationInfo(this IAuditable auditable, string username)
+        public static void SetAuditCreationInfo(this IAuditable auditable, string username, DateTime creation)
         {
-            auditable.CreationDate = DateTime.Now;
+            auditable.CreationDate = creation;
             auditable.CreatedBy = username;
         }
 

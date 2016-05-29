@@ -110,8 +110,7 @@ namespace Examen_Voorbeeld
 
                     if (student != null)
                     {
-                        Helper.SetAuditCreationInfo(student, xdoc.Element("Message").Attribute("Source").Value);
-                        student.CreationDate = DateTime.Parse(xdoc.Element("Message").Attribute("CreationDateTime").Value);
+                        Helper.SetAuditCreationInfo(student, xdoc.Element("Message").Attribute("Source").Value, DateTime.Parse(xdoc.Element("Message").Attribute("CreationDateTime").Value));
                         students.Upsert(student);
                         worker.ReportProgress(1);
                         //Thread.Sleep(1000);
