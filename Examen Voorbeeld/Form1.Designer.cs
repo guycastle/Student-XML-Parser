@@ -108,6 +108,7 @@
             this.btnCancel.TabIndex = 9;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // tbResult
             // 
@@ -161,7 +162,9 @@
             // 
             // bckGrndWorker
             // 
-            this.bckGrndWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bckGrndWorker_DoWork);
+            this.bckGrndWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwImport);
+            this.bckGrndWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwProgress);
+            this.bckGrndWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwComplete);
             // 
             // Form1
             // 

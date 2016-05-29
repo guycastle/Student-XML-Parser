@@ -19,5 +19,15 @@ namespace Domain
         {
             return string.Join("\r\n", items);
         }
+
+        public static int getLeeftijd(this Student student)
+        {
+            int leeftijd = DateTime.Now.Year - student.GeboorteDatum.Year;
+            if (DateTime.Now.Month < student.GeboorteDatum.Month || (DateTime.Now.Month == student.GeboorteDatum.Month && DateTime.Now.Day < student.GeboorteDatum.Day))
+            {
+                leeftijd--;
+            }
+            return leeftijd;
+        }
     }
 }
