@@ -113,7 +113,7 @@ namespace Examen_Voorbeeld
                         Helper.SetAuditCreationInfo(student, xdoc.Element("Message").Attribute("Source").Value, DateTime.Parse(xdoc.Element("Message").Attribute("CreationDateTime").Value));
                         students.Upsert(student);
                         worker.ReportProgress(1);
-                        Thread.Sleep(20);
+                        //Thread.Sleep(20);
                     }
                 }
             });
