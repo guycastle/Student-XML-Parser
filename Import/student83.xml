@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Message Source="iBaMaFlex" CreationDateTime="2014-05-20T14:35:21.3158678+02:00">
+  <Student IsDeleted="false">
+    <Id>1083</Id>
+    <FirstName>An</FirstName>
+    <LastName>Van Eetveld</LastName>
+    <Dob>1986-05-20T14:35:21.3158678+02:00</Dob>
+  </Student>
+</Message>
