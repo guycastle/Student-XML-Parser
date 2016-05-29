@@ -56,7 +56,6 @@ namespace Examen_Voorbeeld
                 {
                     btnImport.Enabled = false;
                 }
-
             }
         }
 
@@ -67,10 +66,10 @@ namespace Examen_Voorbeeld
             if (!valResult)
             {
                 var invalidCount = Task.Run<int>(() => (from s in students where !s.Validate() select s).Count());
-                var tooOldCount = Task.Run<int>(() => students.Count(x => Helper.getLeeftijd(x) > 100));
-                var tooYoungCount = Task.Run<int>(() => students.Count(x => Helper.getLeeftijd(x) < 15));
-                var tooOldList = Task.Run<IEnumerable<Student>>(() => students.Where(x => Helper.getLeeftijd(x) > 100));
-                var tooYoungList = Task.Run<IEnumerable<Student>>(() => students.Where(x => Helper.getLeeftijd(x) < 15));
+                var tooOldCount = Task.Run<int>(() => (from s in students where s != null && Helper.getLeeftijd(s) > 100 select s).Count());
+                var tooYoungCount = Task.Run<int>(() => (from s in students where s != null && Helper.getLeeftijd(s) < 15 select s).Count());
+                var tooOldList = Task.Run<IEnumerable<Student>>(() => from s in students where s != null && Helper.getLeeftijd(s) > 100 select s);
+                var tooYoungList = Task.Run<IEnumerable<Student>>(() => from s in students where s != null && Helper.getLeeftijd(s) < 15 select s);
                 await Task.WhenAll(invalidCount, tooOldCount, tooYoungCount, tooOldList, tooYoungList);
                 sb.Append("Invalid: ")
                     .Append(invalidCount.Result)
@@ -84,6 +83,7 @@ namespace Examen_Voorbeeld
                     .Append(Helper.Print(tooYoungList.Result));
             }
             tbValidationResults.Text = sb.ToString();
+            btnValidate.Enabled = false;
         }
 
         private void bgwImport(object sender, DoWorkEventArgs e)
@@ -113,7 +113,7 @@ namespace Examen_Voorbeeld
                         Helper.SetAuditCreationInfo(student, xdoc.Element("Message").Attribute("Source").Value, DateTime.Parse(xdoc.Element("Message").Attribute("CreationDateTime").Value));
                         students.Upsert(student);
                         worker.ReportProgress(1);
-                        //Thread.Sleep(1000);
+                        Thread.Sleep(20);
                     }
                 }
             });
