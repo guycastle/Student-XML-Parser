@@ -33,8 +33,11 @@ namespace Domain
         }
 
         public void Upsert(T item)
-        {   
-            this.items.RemoveAll(x => x.ID == item.ID);
+        {
+            if (this.items.Contains(item))
+            {
+                this.items.Remove(item);
+            }
             this.items.Add(item);
         }
 

@@ -60,22 +60,28 @@ namespace Examen_Voorbeeld
             }
         }
 
-        private void btnValidate_Click(object sender, EventArgs e)
+        private async void btnValidate_Click(object sender, EventArgs e)
         {
-            bool valResult = students.ValidateAll();
+            var valResult = students.ValidateAll();
             StringBuilder sb = new StringBuilder(valResult ? "All elements are valid" : "Warning: validation errors detected\r\n");
             if (!valResult)
             {
+                var invalidCount = Task.Run<int>(() => students.Count(x => !x.Validate()));
+                var tooOldCount = Task.Run<int>(() => students.Count(x => Helper.getLeeftijd(x) > 100));
+                var tooYoungCount = Task.Run<int>(() => students.Count(x => Helper.getLeeftijd(x) < 15));
+                var tooOldList = Task.Run<IEnumerable<Student>>(() => students.Where(x => Helper.getLeeftijd(x) > 100));
+                var tooYoungList = Task.Run<IEnumerable<Student>>(() => students.Where(x => Helper.getLeeftijd(x) < 15));
+                await Task.WhenAll(invalidCount, tooOldCount, tooYoungCount, tooOldList, tooYoungList);
                 sb.Append("Invalid: ")
-                    .Append(students.Count(x => !x.Validate()))
+                    .Append(invalidCount.Result)
                     .Append("\r\nToo old: ")
-                    .Append(students.Count(x => Helper.getLeeftijd(x) > 100 ))
+                    .Append(tooOldCount.Result)
                     .Append("\r\n")
-                    .Append(Helper.Print(students.Where(x => Helper.getLeeftijd(x) > 100)))
+                    .Append(Helper.Print(tooOldList.Result))
                     .Append("\r\nToo young: ")
-                    .Append(students.Count(x => Helper.getLeeftijd(x) < 15))
+                    .Append(tooYoungCount.Result)
                     .Append("\r\n")
-                    .Append(Helper.Print(students.Where(x => Helper.getLeeftijd(x) < 15)));
+                    .Append(Helper.Print(tooYoungList.Result));
             }
             tbValidationResults.Text = sb.ToString();
         }
@@ -83,12 +89,11 @@ namespace Examen_Voorbeeld
         private void bgwImport(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            foreach (var filePath in Directory.EnumerateFiles(selectedPath))
+            Parallel.ForEach<String>(Directory.EnumerateFiles(selectedPath), filePath =>
             {
                 if (worker.CancellationPending)
                 {
                     e.Cancel = true;
-                    break;
                 }
                 else
                 {
@@ -112,7 +117,7 @@ namespace Examen_Voorbeeld
                         //Thread.Sleep(1000);
                     }
                 }
-            }
+            });
         }
 
         private void bgwProgress(object sender, ProgressChangedEventArgs e)
